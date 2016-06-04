@@ -1,22 +1,22 @@
 import sys, pygame
 import itertools
 
-duck_file = './p1_walk/p1_duck.png'
-front_file = './p1_walk/p1_front.png'
-jump_file = './p1_walk/p1_jump.png'
+duck_file = './sprites/p1_duck.png'
+front_file = './sprites/p1_front.png'
+jump_file = './sprites/p1_jump.png'
 
 walk_files = [
-    './p1_walk/p1_walk01.png',
-    './p1_walk/p1_walk02.png',
-    './p1_walk/p1_walk03.png',
-    './p1_walk/p1_walk04.png',
-    './p1_walk/p1_walk05.png',
-    './p1_walk/p1_walk06.png',
-    './p1_walk/p1_walk07.png',
-    './p1_walk/p1_walk08.png',
-    './p1_walk/p1_walk09.png',
-    './p1_walk/p1_walk10.png',
-    './p1_walk/p1_walk11.png'
+    './sprites/p1_walk01.png',
+    './sprites/p1_walk02.png',
+    './sprites/p1_walk03.png',
+    './sprites/p1_walk04.png',
+    './sprites/p1_walk05.png',
+    './sprites/p1_walk06.png',
+    './sprites/p1_walk07.png',
+    './sprites/p1_walk08.png',
+    './sprites/p1_walk09.png',
+    './sprites/p1_walk10.png',
+    './sprites/p1_walk11.png'
 ]
 
 pygame.init()
@@ -103,15 +103,15 @@ while True:
                     else:
                         player_iterator = stationary_iterator
             else:
-                if go_down and not crouching:
-                    crouching = True
+                if go_down and not ducking:
+                    ducking = True
                     if x_vect < 0:
                         player_iterator = duck_left_iterator
                     else:
                         player_iterator = duck_right_iterator
                     x_vect = 0
                 elif not go_down:
-                    crouching = False
+                    ducking = False
                     if go_left and x_vect >= 0:
                         x_vect = -5
                         player_iterator = left_player_iterator()
