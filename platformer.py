@@ -1,6 +1,7 @@
 import sys, pygame
 import itertools
 
+duck_file = './p1_walk/p1_duck.png'
 front_file = './p1_walk/p1_front.png'
 jump_file = './p1_walk/p1_jump.png'
 
@@ -28,6 +29,8 @@ screen = pygame.display.set_mode(size)
 front_image = pygame.image.load(front_file)
 jump_right_image = pygame.image.load(jump_file)
 jump_left_image = pygame.transform.flip(jump_right_image, True, False)
+duck_right_image = pygame.image.load(duck_file)
+duck_left_image = pygame.transform.flip(duck_right_image, True, False)
 
 right_walk_images = [pygame.image.load(filename) for filename in walk_files]
 left_walk_images = [pygame.transform.flip(image, True, False) for image in right_walk_images]
@@ -41,6 +44,9 @@ def left_player_iterator():
 stationary_iterator = itertools.repeat(front_image)
 jump_right_iterator = itertools.repeat(jump_right_image)
 jump_left_iterator = itertools.repeat(jump_left_image)
+duck_right_iterator = itertools.repeat(duck_right_image)
+duck_left_iterator = itertools.repeat(duck_left_image)
+
 player_iterator = stationary_iterator
 
 image = next(player_iterator)
@@ -53,6 +59,7 @@ y_vect = 0
 pygame.time.set_timer(pygame.USEREVENT, 16)
 
 in_air = False
+crounching = False
 
 clock = pygame.time.Clock()
 
@@ -71,6 +78,7 @@ while True:
             go_left = left_pressed and not right_pressed
             go_right = right_pressed and not left_pressed
             go_up = up_pressed and not down_pressed
+            go_down = down_pressed and not up_pressed
 
             y += y_vect
             x += x_vect
@@ -95,15 +103,24 @@ while True:
                     else:
                         player_iterator = stationary_iterator
             else:
-                if go_left and x_vect >= 0:
-                    x_vect = -5
-                    player_iterator = left_player_iterator()
-                elif go_right and x_vect <= 0:
-                    x_vect = 5
-                    player_iterator = right_player_iterator()
-                elif not go_left and not go_right:
+                if go_down and not crouching:
+                    crouching = True
+                    if x_vect < 0:
+                        player_iterator = duck_left_iterator
+                    else:
+                        player_iterator = duck_right_iterator
                     x_vect = 0
-                    player_iterator = stationary_iterator
+                elif not go_down:
+                    crouching = False
+                    if go_left and x_vect >= 0:
+                        x_vect = -5
+                        player_iterator = left_player_iterator()
+                    elif go_right and x_vect <= 0:
+                        x_vect = 5
+                        player_iterator = right_player_iterator()
+                    elif not go_left and not go_right:
+                        x_vect = 0
+                        player_iterator = stationary_iterator
 
             image = next(player_iterator)
 
