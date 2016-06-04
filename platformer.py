@@ -26,7 +26,9 @@ black = 0, 0, 0
 screen = pygame.display.set_mode(size)
 
 front_image = pygame.image.load(front_file)
-jump_image = pygame.image.load(jump_file)
+jump_right_image = pygame.image.load(jump_file)
+jump_left_image = pygame.transform.flip(jump_right_image, True, False)
+
 right_walk_images = [pygame.image.load(filename) for filename in walk_files]
 left_walk_images = [pygame.transform.flip(image, True, False) for image in right_walk_images]
 
@@ -37,19 +39,22 @@ def left_player_iterator():
     return itertools.cycle(left_walk_images)
 
 stationary_iterator = itertools.repeat(front_image)
-jump_iterator = itertools.repeat(jump_image)
+jump_right_iterator = itertools.repeat(jump_right_image)
+jump_left_iterator = itertools.repeat(jump_left_image)
 player_iterator = stationary_iterator
 
 image = next(player_iterator)
 x = 0
 y = 0
+
+x_vect = 0
 y_vect = 0
 
 pygame.time.set_timer(pygame.USEREVENT, 16)
 
-travelling_left = False
-travelling_right = False
 in_air = False
+
+
 
 while True:
     for event in pygame.event.get():
@@ -67,36 +72,38 @@ while True:
             go_right = right_pressed and not left_pressed
             go_up = up_pressed and not down_pressed
 
+            y += y_vect
+            x += x_vect
+
             if go_up and not in_air:
                 in_air = True
-                travelling_left = False
-                travelling_right = False
-                player_iterator = jump_iterator
+                if x_vect < 0:
+                    player_iterator = jump_left_iterator
+                else:
+                    player_iterator = jump_right_iterator
                 y_vect = 15
-
-            if in_air:
-                y += y_vect
+            elif in_air:
                 y_vect -= 1
                 if y < 0:
                     y = 0
+                    y_vect = 0
                     in_air = False
-            else:
-                if go_left and travelling_left:
-                    x -= 5
-                elif go_right and travelling_right:
-                    x += 5
-                else:
-                    travelling_left = False
-                    travelling_right = False
-
                     if go_left:
-                        travelling_left = True
                         player_iterator = left_player_iterator()
                     elif go_right:
-                        travelling_right = True
                         player_iterator = right_player_iterator()
                     else:
                         player_iterator = stationary_iterator
+            else:
+                if go_left and x_vect >= 0:
+                    x_vect = -5
+                    player_iterator = left_player_iterator()
+                elif go_right and x_vect <= 0:
+                    x_vect = 5
+                    player_iterator = right_player_iterator()
+                elif not go_left and not go_right:
+                    x_vect = 0
+                    player_iterator = stationary_iterator
 
             image = next(player_iterator)
 
