@@ -54,7 +54,7 @@ pygame.time.set_timer(pygame.USEREVENT, 16)
 
 in_air = False
 
-
+clock = pygame.time.Clock()
 
 while True:
     for event in pygame.event.get():
@@ -113,3 +113,5 @@ while True:
     rect.x = x
     screen.blit(image, rect)
     pygame.display.flip()
+
+    clock.tick(50)
