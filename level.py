@@ -8,12 +8,14 @@ def load_tile(filename):
     assert rect.height == 70
     return image
 
+background_filename = './sprites/background.png'
 grass_filename = './sprites/grass.png'
 grass_mid_filename = './sprites/grassMid.png'
 grass_center_filename = './sprites/grassCenter.png'
 grass_left_filename = './sprites/grassLeft.png'
 grass_right_filename = './sprites/grassRight.png'
 
+background_image = pygame.image.load(background_filename)
 grass_image = load_tile(grass_filename)
 grass_mid_image = load_tile(grass_mid_filename)
 grass_center_image = load_tile(grass_center_filename)

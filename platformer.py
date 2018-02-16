@@ -11,12 +11,12 @@ import shapes
 
 grid = [
     '          ',
-    '   ##     ',
     '          ',
+    '   ##     ',
     '       ###',
-    '# #  ##   ',
+    '#    ##   ',
     '    #     ',
-    '   #      ',
+    '          ',
     '     #    ',
     '   #      ',
     ' ##       '
@@ -51,7 +51,7 @@ class Platformer(object):
         pass
 
     def draw(self, screen):
-        screen.fill((0,0,0))
+        screen.blit(level.background_image, level.background_image.get_rect())
 
         # Render level
         for image, rect in l1.rects():
